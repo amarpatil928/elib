@@ -1,0 +1,22 @@
+{
+  "name": "elib",
+  "version": "1.0.0",
+  "description": "This is a ebook api project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "rest",
+    "api",
+    "express"
+  ],
+  "author": "Amar Patil <amarpatil928@gamil.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^7.0.2"
+  }
+}
