@@ -50,7 +50,7 @@ const createUSer = async (req: Request, res: Response, next: NextFunction) => {
       algorithm: "HS256",
     });
 
-    res.json({ accessToken: token });
+    res.status(201).json({ accessToken: token });
   } catch {
     return next(createHttpError(500, "Error while signing the jwt token."));
   }
