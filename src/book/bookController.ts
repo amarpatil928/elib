@@ -193,4 +193,35 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { createBook, updateBook };
+const listBook = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const books = await bookModel.find();
+    res.json(books);
+  } catch (error) {
+    console.error(error);
+    next(createHttpError(500, "Error while getting books."));
+  }
+};
+
+const getSingleBook = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const bookId = req.params.bookId;
+    if (typeof bookId !== "string" || !bookId.trim()) {
+      return next(createHttpError(400, "Invalid book ID"));
+    }
+    const book = await bookModel.findOne({ _id: bookId });
+    if (!book) {
+      return next(createHttpError(500, "Book not found."));
+    }
+    res.json(book);
+  } catch (error) {
+    console.error(error);
+    return next(createHttpError(500, "Error while getting book."));
+  }
+};
+
+export { createBook, updateBook, listBook, getSingleBook };
