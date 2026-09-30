@@ -3,13 +3,16 @@ import cloudinary from "../config/cloudinary.js";
 import createHttpError from "http-errors";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import bookModel from "./bookModel.js";
+import fs from "node:fs";
+import type { Athenticate } from "../middlewares/authenticate.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("files", req.files);
+    const { title, genre } = req.body;
 
     const files = req.files as {
       [filename: string]: Express.Multer.File[];
@@ -36,8 +39,6 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
       folder: "book-cover",
     });
 
-    console.log("uploadResult:", uploadResult);
-
     const bookFile = files.file?.[0];
 
     if (!bookFile) {
@@ -62,12 +63,23 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
       },
     );
 
+    console.log("uploadResult:", uploadResult);
     console.log("uploadResult:", bookFileUploadResult);
 
-    return res.status(201).json({
-      message: "Book created successfully",
+    const _req = req as Athenticate;
+
+    const newBook = await bookModel.create({
+      title,
+      genre,
+      author: _req.userId,
       coverImage: uploadResult.secure_url,
+      file: bookFileUploadResult.secure_url,
     });
+
+    await fs.promises.unlink(filePath);
+    await fs.promises.unlink(bookFilePath);
+
+    res.status(201).json({ id: newBook._id });
   } catch (error) {
     console.error("Cloudinary upload error:", error);
 
