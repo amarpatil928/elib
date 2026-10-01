@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { config } from "../config/config.js";
 import console from "node:console";
 
-export interface Athenticate extends Request {
+export interface Authenticate extends Request {
   userId: string;
 }
 
@@ -22,7 +22,7 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
       config.jwtSecret as string,
     );
 
-    const _req = req as Athenticate;
+    const _req = req as Authenticate;
 
     _req.userId = decoded.sub as string;
 
